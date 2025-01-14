@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% if predictions_data %} 
+<section id="Result">
+    <context_r>
+        <div class="container_r1">
+            <div class="header_r">
+                <h1>Analysis Results</h1>
+            </div>
+            <div class="subheading_r">
+                    <p>Pathogen Type Selected: <strong> {{ virus_type }} </strong></p>
+            </div>
+            <div class="download-link_r">
+                <div class="link-info_r"> 
+                    <div class="link-box_r">
+                        <h3><a href="\media\Epidemic_Predictions.csv"><i class="fas fa-download"></i> Download Prediction File</a></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="container_r2">
+                <div class="content_r">
+                    <div class="charts_r">
+                        <div class="chart_r">
+                            <h3>Case_growth_rate v/s Time</h3>
+                            <img alt="Bar chart showing case growth rate over time" height="480" src="\media\graphs\case_growth_rate.png" width="1000"/>
+                        </div>
+                        <div class="chart_r">
+                            <h3>Case v/s Time</h3>
+                            <img alt="Bar chart showing case over time" height="480" src="\media\graphs\cases_over_time.png" width="1000"/>
+                        </div>
+                        <div class="chart_r">
+                            <h3>Death_growth_rate v/s Time</h3>
+                            <img alt="Bar chart showing death growth rate over time" height="480" src="\media\graphs\death_growth_rate.png" width="1000"/>
+                        </div>
+                        <div class="chart_r">
+                            <h3>Death v/s Time</h3>
+                            <img alt="Bar chart showing death over time" height="480" src="\media\graphs\deaths_over_time.png" width="1000"/>
+                        </div>
+                    </div>
+                    <div class="chart_r">
+                        <h3>Epidemic Probability v/s Time</h3>
+                        <img alt="Bar chart showing Epidemic_prediction_probability over time" height="800" src="\media\graphs\epidemic_probability_over_time.png" width="1000"/>
+                    </div>
+                    <div class="bottom-section_r">
+                        <div class="slider-container_r">
+                            <h3>Day Slider</h3>
+                            <input type="range" id="day-slider" min="0" max="{{ predictions_data|length }}" value="0" oninput="updateDayInfo(this.value)">
+                            <span id="selected-day">Day: 1</span>
+                        </div>                        
+                        <!-- Prediction Display -->
+                        <div id="prediction-table">
+                            <div class="prediction-row">
+                                <div class="prediction-meter_r">
+                                    <h3>Predictition</h3>
+                                    <div class="meter_r">
+                                        <div class="speedometer">
+                                            <div class="needle" id="needle" style="--score: 0">
+                                                <span class="score" id="prediction-probability">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p>Epidemic Chances<strong>(%)</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom-section_r2">
+                        <div id="prediction-table">
+                            <div class="prediction-row">
+                                <div class="additional-info_r">
+                                    <div class="info-box_r">
+                                        <h3>Date</h3>
+                                        <p id="date"></p>
+                                    </div>
+                                    <div class="info-box_r">
+                                        <h3>Active Case</h3>
+                                        <p id="active-case"></p>
+                                    </div>
+                                    <div class="info-box_r">
+                                        <h3>Death</h3>
+                                        <p id="death"></p>
+                                    </div>
+                                    <div class="info-box_r">
+                                        <h3>Current Situation</h3>
+                                        <p id="predicted-label"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </context_r>
+</section>
+<script>
+    // Slider Logic to Update Day Data
+    const slider = document.getElementById('day-slider');
+    const selectedDay = document.getElementById('selected-day');
+    const dateElem = document.getElementById('date');
+    const activeCaseElem = document.getElementById('active-case');
+    const deathElem = document.getElementById('death');
+    const predictedLabelElem = document.getElementById('predicted-label');
+    const predictionProbabilityElem = document.getElementById('prediction-probability');
+    const needleElem = document.querySelector('.needle'); // Adjusted to match the needle class
+
+    const predictionsData = {{ predictions_data|safe }}; // Django renders this as a JavaScript object
+
+    // Function to update prediction data based on the selected day
+    function updatePrediction(dayIndex) {
+        const row = predictionsData[dayIndex];
+
+        // Update all elements with the current row's data
+        dateElem.textContent = formatDate(row.Date); // Reformat date to DD-MM-YYYY
+        activeCaseElem.textContent = row['Active Case'];
+        deathElem.textContent = row.Death;
+        predictedLabelElem.textContent = row['Predicted Label'];
+        predictionProbabilityElem.textContent = row['Prediction Probability'];
+
+        // Update the needle score using the prediction probability
+        needleElem.style.setProperty('--score', row['Prediction Probability']);
+    }
+
+    // Reformat Date from YYYY-MM-DD to DD-MM-YYYY
+    function formatDate(dateString) {
+        const [year, month, day] = dateString.split('-');
+        return `${day}-${month}-${year}`;
+    }
+
+    // Handle slider input changes
+    slider.addEventListener('input', function(event) {
+        const dayIndex = event.target.value;
+        selectedDay.textContent = `Day: ${parseInt(dayIndex) + 1}`;
+        updatePrediction(dayIndex);
+    });
+
+    // Initialize the display with the first day's data
+    updatePrediction(0); // Set initial day (first data row)
+</script>
+{% else %}
+    <p>No results available. Please upload a dataset.</p>
+{% endif %}
+{% endblock %}

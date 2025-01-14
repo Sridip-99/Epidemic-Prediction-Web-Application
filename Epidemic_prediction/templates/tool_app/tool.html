@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+	{% block content %}
+	{% load static %}
+
+	{% if error_message %}
+		<p class="error">{{ error_message }}</p>
+	{% endif %}
+
+	{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}
+		</div>
+    {% endif %}
+
+	<section id="Tool">
+		<div class="container_t">
+			<div class="header">
+				<h1>
+					Enter Your Dataset Here
+				</h1>
+				<p>
+					Here you find out every insights, after uploading your dataset, our trained model will analyze your .csv file &amp; return you the insights.
+					<br>
+					If you know the type of pathogen then 1st <i>select</i> it, then <i>upload</i> the dataset. If you don't know the type of pathogen then <i>avoid selection.</i>
+				</p>
+			</div>
+			<div class= "container_t2">
+					<div class="content">
+						<div class="left">
+							<h2>
+								Select Pathogen type
+							</h2>
+							<div class="virus-list-container">
+								<ul class="virus-list">
+									<li>
+										<button type="button" class="listButton">
+											<input type="hidden" class="selectedVirusInput" name="selectedVirus" value="COVID 19">
+											<label for="listBtn">COVID 19</label>
+										</button>
+									</li>
+									<li>
+										<button type="button" class="listButton">
+											<input type="hidden" class="selectedVirusInput" name="selectedVirus" value="Cholera">
+											<label for="listBtn">Cholera</label>
+										</button>
+									</li>
+									<li>
+										<button type="button" class="listButton">
+											<input type="hidden" class="selectedVirusInput" name="selectedVirus" value="Ebola">
+											<label for="listBtn">Ebola</label>
+										</button>
+									</li>
+									<li>
+										<button type="button" class="listButton">
+											<input type="hidden" class="selectedVirusInput" name="selectedVirus" value="SARS">
+											<label for="listBtn">SARS</label>
+										</button>
+									</li>
+									<li>
+										<button type="button" class="listButton">
+											<input type="hidden" class="selectedVirusInput" name="selectedVirus" value="Swine Flu">
+											<label for="listBtn">Swine Flu</label>
+										</button>
+									</li>
+								</ul>
+							</div>			
+						</div>
+						<div class="right">
+							<h2>
+								Upload Your Files
+							</h2>
+							<div id="upload-box" class="upload-box">
+								<form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_and_predict' %}">
+									{% csrf_token %}
+									<input type="file" id="fileInput" name="csv_file" accept=".csv" required>
+									<button type="submit" id="submitButton">Submit</button>
+
+									<div class="format-icons">
+										<img alt=".CSV file icon" src="\static\pictures\Logos\file_upload_icon.png" />
+										<div class="format-label" style="background-color: #00bd1c; margin-top: -0.3rem;">
+											<div class="label">.CSV</div>
+										</div>
+									</div>
+									<p>Drop File Here</p>
+									<div class="divider">
+										<span>or</span>
+										<hr>
+									</div>
+
+									<button class="upload-button">
+										<form id="uploadForm" method="post" enctype="multipart/form-data" action="{% url 'upload_and_predict' %}">
+											{% csrf_token %}
+											<label for="fileInput"><i class="fas fa-file-upload"></i> Upload .CSV file</label>
+											<!-- File input -->
+											<input type="file" id="fileInput" name="csv_file" accept=".csv" required>
+											<!-- pathogen type hidden input -->
+											<input type="hidden" id="selectedVirus" name="selectedVirus" value="">
+											<button type="submit" id="submitButton">Submit</button>
+										</form>
+										<script src="{% static 'javascripts/get_csv.js' %}"></script>
+									</button>
+
+								</form>
+							</div>
+							<script src="{% static 'javascripts/listButton.js' %}"></script>
+							<script src="{% static 'javascripts/drag@drop.js' %}"></script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+    {% endblock %}

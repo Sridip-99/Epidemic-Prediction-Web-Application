@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+    {% block content %}
+    <section id="login">
+        <div class="container_login">
+            <div class="header_login">No Dataset Found</div>
+            {% if messages %}
+                <div class="message_login">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <a class="logout-button" href="{% url "logout" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out</a>
+        </div>
+    </section>
+    {% endblock %}
