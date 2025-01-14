@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+    {% block content %}
+    {% load static %}
+    <section id="OTP-verification">
+        <div class="container_login">
+            <div class="header_login">OTP-Verification</div>
+            {% if messages %}
+                <div class="message_login">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="hidden" id="source-page" value="{{ source_page }}">
+            <div id="otp-timer">
+                <p><b>OTP will expire in <span id="time-left" style="color:red;">60</span> seconds</b></p>
+            </div>
+            <script src="{% static 'javascripts/timer.js' %}"></script>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group_login">
+                    <label for="OTP">Enter OTP:</label>
+                    <input type="number" id="otp" name="otp" required>
+                </div>
+                <button type="submit" class="login-button_login">Verify OTP</button>
+            </form>
+        </div>
+    </section>
+    {% endblock %}
