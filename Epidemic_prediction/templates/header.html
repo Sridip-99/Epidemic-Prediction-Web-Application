@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="shortcut icon" href="\static\pictures\Logos\project_logo.png">
+		<!--<link rel="shortcut icon" href="\static\pictures\Logos\tmsl_logo.png">-->
+		<title>{{title}}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+		<link rel="stylesheet" href="\static\css\styles.css">
+	</head>
+
+	<body>
+		<div id="navbar">
+			<img alt= "Navbar_Logo" src="\static\pictures\Logos\project_nav_logo.png" height="60" width="240"/>
+			<!-- <img alt= "TMSLLogo" src="https://www.ticollege.ac.in/img/tmslogo.png" height="60" width="240"/> -->
+			<div id="navbar-right">
+				<a class="{% if request.path == '/'%} active {% endif %}" href="{% url "Home" %}"><i class="fa fa-fw fa-home"></i> Home</a>
+				<a class="{% if request.path == '/aboutUs/'%} active {% endif %}" href="{% url "About-Us" %}"><i class="fa fa-fw fa-info-circle"></i> About Us</a>
+				<a class="{% if request.path == '/tool/tool/'%} active {% endif %}" href="{% url "Tool" %}"><i class="fa fa-fw fa-gear"></i> Tool</a>
+				<a class="{% if request.path == '/tool/result_view/'%} active {% endif %}" href="{% url "result_view" %}"><i class="fa fa-file" aria-hidden="true"></i> Result</a>
+				
+				{% if user.is_authenticated %}
+				<form action="{% url 'logout' %}" method="post">
+					{% csrf_token %}
+					<button type="submit" id="submitBtn"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out</button>
+				</form>
+				{% else %}
+				<a class="{% if request.path == '/auth/login/'%} active {% endif %}" href="{% url 'login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Sign In</a>
+				{% endif %}
+				
+				<a class="admin-login-button" href="/admin/login/"><i class="fa fa-lock" aria-hidden="true"></i> Admin Sign In</a>
+				
+				<div class="dropdown">
+					<button class="dropbtn">More
+						<i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+					</button>
+					<div class="dropdown-content">
+						<a class="{% if request.path == '/mentor/'%} active {% endif %}" href="{% url "Mentor" %}"><i class="fa fa-fw fa-user"></i> Mentor</a>
+						<a class="{% if request.path == '/team/'%} active {% endif %}" href="{% url "Team" %}"><i class="fa fa-fw fa-group"></i> Team</a>
+						<a href="https://www.medicalnewstoday.com/" target="_blank"><i class="fa fa-newspaper-o" aria-hidden="true"></i> News</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
